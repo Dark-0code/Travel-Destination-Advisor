@@ -1,0 +1,81 @@
+<!-- templates/results.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.hotel-card {
+  transition: transform .3s, box-shadow .3s;
+  border: none;
+}
+.hotel-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.hotel-img {
+  height: 200px;
+  object-fit: cover;
+  transition: transform .3s;
+  border-top-left-radius: calc(.25rem - 1px);
+  border-top-right-radius: calc(.25rem - 1px);
+}
+.hotel-card:hover .hotel-img {
+  transform: scale(1.05);
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold mb-1">{{ destination }}</h2>
+    <small class="text-muted">{{ check_in }} &mdash; {{ check_out }}</small>
+  </div>
+  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← New Search</a>
+</div>
+
+<div class="row gy-4">
+  {% if weather %}
+  <div class="col-md-4">
+    <div class="card text-center shadow hotel-card">
+      <div class="card-body">
+        <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Weather" class="mb-2" style="width:100px;">
+        <h5 class="card-title">{{ weather.temp }}°C</h5>
+        <p class="card-text text-capitalize">{{ weather.description }}</p>
+        <small class="text-muted">Humidity: {{ weather.humidity }}%</small>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="col-md-8 d-flex align-items-center">
+    <h4 class="mb-0">Top Hotels</h4>
+  </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-2">
+  {% for hotel in hotels %}
+  <div class="col">
+    <div class="card h-100 shadow hotel-card">
+      {% if hotel.photo %}
+      <img src="{{ hotel.photo }}" class="hotel-img" alt="{{ hotel.name }}">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title text-truncate">{{ hotel.name }}</h5>
+        <p class="card-text text-truncate mb-2">{{ hotel.address }}</p>
+        <div class="mt-auto">
+          <p class="mb-1"><strong>${{ hotel.price }}</strong> / night</p>
+          <p class="mb-2 text-warning">{{ '★' * hotel.rating | int }}{{ '☆' * (5 - hotel.rating | int) }}</p>
+          <a href="{{ url_for('payment', hotel_id=hotel.id) }}" class="btn btn-primary w-100" style="border-radius: 50px;">Book Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

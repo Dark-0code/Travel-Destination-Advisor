@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow text-center">
+        <div class="card-header bg-success text-white">
+            <h2>Booking Confirmed!</h2>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-success">
+                <h4>Thank you for your booking!</h4>
+                <p>Your reservation at <strong>{{ hotel.name }}</strong> is confirmed.</p>
+                <p>Total paid: <strong>${{ total }}</strong> for {{ nights }} nights</p>
+                <hr>
+                <p>A confirmation email has been sent to your registered address.</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
